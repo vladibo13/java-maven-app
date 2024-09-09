@@ -1,16 +1,31 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'maven-3.9'
+    }
+    environment {
+        NEW_VERSION = '1.3.0'
+    }
     stages{
-        stage("build") {
+        stage("build jar") {
             steps {
-                echo "buildeing the app..."
+                script {
+                    echo "buildeing the app..."
+                    sh 'mvn package'
+                }
             }
         }
 
-        stage("test") {
+        stage("build image") {
             steps {
-                echo "testing the app..."
+                script {
+                    echo "buildeing the docker image"
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh 'docker build -t vladibo/demo-app:jma-1.2 .'
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh 'docker push vladibo/demo-app:jma-1.2'
+                    }
+                }
             }
         }
 
