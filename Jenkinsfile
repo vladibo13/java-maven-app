@@ -26,10 +26,12 @@ pipeline {
             }
         }
 
-        stage("build image") {
+        stage("build and push image") {
             steps {
                 script {
                     buildImage "vladibo/demo-app:jma-1.4"
+                    dockerLogin()
+                    dockerPush "vladibo/demo-app:jma-1.4"
                 }
             }
         }
