@@ -1,54 +1,41 @@
+#!/usr/bin/env groovy
+
+@Libary('jenkins-shared-libary')
+def gv 
+
+
 pipeline {
     agent any
     tools {
-        maven 'maven-3.9'
+        maven 'Maven'
     }
-    environment {
-        NEW_VERSION = '1.3.1'
-    }
+
     stages{
-        stage("test") {
+        stage("init") {
             steps {
                 script {
-                    echo "Testing the application..."
-                    echo "Executing the pipeline for branch $BRANCH_NAME"
-                }
-            }
-        }
-        stage("build jar") {
-            when{
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
-            steps {
-                script {
-                    echo "buildeing the app..."
-                    // sh 'mvn package'
+                  gv = load "script.groovy"
                 }
             }
         }
 
-        // stage("build image") {
-        //     steps {
-        //         script {
-        //             echo "buildeing the docker image"
-        //             withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-        //                 sh 'docker build -t vladibo/demo-app:jma-1.2 .'
-        //                 sh 'echo $PASS | docker login -u $USER --password-stdin'
-        //                 sh 'docker push vladibo/demo-app:jma-1.2'
-        //             }
-        //         }
-        //     }
-        // }
+        stage("build jar") {
+            steps {
+                script {
+                   buildJar()
+                }
+            }
+        }
+
+        stage("build image") {
+            steps {
+                script {
+                    buildImage()
+                }
+            }
+        }
 
         stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
-
             steps {
                 echo "deploying the app..."
             }
