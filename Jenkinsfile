@@ -53,7 +53,7 @@ pipeline {
 
         stage("deploy") {
             steps {
-                echo "deploying the app updated 434..."
+                echo "deploying the app updated 324234..."
             }
         }
 
