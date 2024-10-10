@@ -57,8 +57,16 @@ pipeline {
             }
         }
 
-        script("commit version update") {
+        stage("commit version update") {
             withCredentials([usernamePassword(credentialsId: 'github-secret', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                // git config
+                sh 'git config --global user.email "jenkins@example.com"'
+                sh 'git config --global user.name "jenkins"'
+
+                sh 'git status'
+                sh 'git branch'
+                sh 'git config --list'
+                
                 sh "git remote set-url origin https://${USER}:${PASS}@github.com/vladibo13/java-maven-app.git"
                 sh 'git add .'
                 sh 'git commit -m "version update"'
