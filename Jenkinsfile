@@ -56,5 +56,14 @@ pipeline {
                 echo "deploying the app updated 434..."
             }
         }
+
+        script("commit version update") {
+            withCredentials([usernamePassword(credentialsId: 'github-secret', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                sh "git remote set-url origin https://${USER}:${PASS}@github.com/vladibo13/java-maven-app.git"
+                sh 'git add .'
+                sh 'git commit -m "version update"'
+                sh 'git push origin HEAD:jenkins-shared-lib'
+            }
+        }
     }
 }
