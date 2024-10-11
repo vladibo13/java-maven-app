@@ -25,7 +25,9 @@ pipeline {
 
         stage("deploy") {
             steps {
+                def dockerCmd = "docker run -p 3080:3080 -d vladibo/react-node-example:1.1"
                 sshagent(['ec2-server-key']) {
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@54.81.204.137 ${dockerCmd}"
                 }
             }
         }
