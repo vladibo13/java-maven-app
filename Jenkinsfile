@@ -13,7 +13,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = 'vladibo/java-maven-app:1.2'
+        IMAGE_NAME = 'vladibo/java-maven-app:1.3'
     }
 
 
